@@ -69,6 +69,7 @@ menu = {
 # }
 # ]
 order = []
+# ---------------------------------------------------------------------------------- > An order list is initialized. (2 points)
 
 # Launch the store and present a greeting to the customer
 print("Welcome to the variety food truck.")
@@ -149,18 +150,26 @@ while place_order:
             #<----- Go back to here to have next action outside printing loop
             # Use line 102
             # 2. Ask customer to input menu item number
-            order_number = input(f"What selection would you like?\n")
+# -----------------------------> User is prompted for their menu item selection and it's saved as a variable menu_selection. (4 points)
+            menu_selection = input(f"What selection would you like?\n")
             # 3. Check if the customer typed a number
-            if order_number.isdigit():
+            if menu_selection.isdigit():
+#-----------------------------------> User input menu_selection is checked as a number and an error is printed if it is not. (4 points)
+#                                                                       (error, both for null and non-valid value @ end of If)
                 # Convert the menu selection to an integer
-                order_number = int(order_number)
+                menu_selection = int(menu_selection)
+# -------------------------------------------------------------------------->  menu_selection is converted to an integer. (2 points)
                 # 4. Check if the menu selection is in the menu items 
                 # Dict menue_items --> (key is menu #)  : 
                 #                   (Value is sub-Dict {Item Name, Price})
                 # Sub catagoires (like 'pizza') have already been looped out 
-                if order_number in menu_items.keys():
+                if menu_selection in menu_items.keys():
+# -------------------------------------> An if-else statement is used to check if menu_selection is in the menu_items keys, 
+#                                                                                       and an error is printed if it isn't. (4 points)
+#                                                                    (error, both for null and non-valid value @ end of If)
                     # Store the item name as a variable
-                    order_name = menu_items[order_number]["Item name"]
+                    order_name = menu_items[menu_selection]["Item name"]
+# ---------> The item name of the customer's selection is extracted from the menu_items dictionary and stored as a variable. (4 points)
                    
                     # Ask the customer for the quantity of the menu item
                     order_qty = input(f"How many {order_name} would you like?\n")
@@ -172,18 +181,18 @@ while place_order:
                         order_qty = 1
                     order_qty = int(order_qty)
                     print(f"{order_qty} {order_name} has been added to your order.")
-                    
-
+#---------------------------------------------------> The customer is prompted for a quantity of their item selection 
+#                                           and the value defaults to 1 if the customer does not input a valid number. (10 points)
 
                     # Add the item name, price, and quantity to the order list
-                    order_price = menu_items[order_number]["Price"]
+                    order_price = menu_items[menu_selection]["Price"]
                     order.append(
                         {
                             "Item name": order_name,
                             "Price": order_price,
                             "Quantity": order_qty
                         })
-                 
+#-------------> The customer's selected item, price, and quantity are appended to the order list in dictionary format. (10 points)                 
 
    # Tell the customer that their input isn't valid
    #      Menue_number is NOT in menue_times keys
@@ -194,10 +203,10 @@ while place_order:
                 # Tell the customer they didn't select a menu option
                 # menu_number is NOT a didgit
             else:
-                if order_number =="":
+                if menu_selection =="":
                     print("A selection needs to be made.")
                 else:
-                    print(f"{order_number} is not a valid menu option.")
+                    print(f"{menu_selection} is not a valid menu option.")
 
         else:
             # Tell the customer they didn't select a menu option
@@ -217,23 +226,26 @@ while place_order:
 
         # 5. Check the customer's input
         #    --> Converting, any non-viable ansewr will restart loop
-        keep_ordering = str(keep_ordering.lower())
-
+        match keep_ordering.lower():
+# -----------------> The match-case statement converts the use input to lowercase or uppercase before checking the case. (4 points)
                 # Keep ordering
-        if keep_ordering == "y":
-            break
+            case "y":
+                break
                 # Exit the keep ordering question loop
-        if keep_ordering == "n":
+            case  "n":
                 # Complete the order
-            place_order = False
+                place_order = False
                 # Since the customer decided to stop ordering, thank them for
                 # their order
-            print("Thank you for ordering")
+                print("Thank you for ordering")
                 # Exit the keep ordering question loop
-            break
-
+                break
+            case _ :
                 # Tell the customer to try again
-        print("Not a valid choice.  Please Try again")
+                print("Not a valid choice.  Please Try again")
+# ------------------------------> A match-case statement is used to check if the customer would like to keep ordering,
+#                                                        and performs the correct actions for y, n, and default cases. (10 points) 
+               
 
 # ****************************************************
 # **************  Receipt  ***************************
@@ -265,17 +277,21 @@ print("--------------------------|--------|----------")
 
 # 6. Loop through the items in the customer's order
 for receipt_dict in order:
-    # ------------------------------------------------------> Take this out
-    #print(receipt_dict)
+# ---------------------------------------------------------------> A for loop is used to loop through the order list. (10 points)
+
     # 7. Store the dictionary items as variables
     receipt_item_name = receipt_dict["Item name"]
     receipt_price = receipt_dict["Price"]
     receipt_quantity = receipt_dict["Quantity"]
-  
+ # -------------------------------------------> The value of each key in each order dictionary is saved as a variable. (6 points)
+
     # 8. Calculate the number of spaces for formatted printing
     #  Generate the correct spacing for the one item you pulled out
     receipt_iten_name_space = (26 - len(receipt_item_name))*" "
     receipt_price_space = (6 - len(str(receipt_price)))*" "
+# ---------------------------------------------------------> The number of formatting spaces are correctly calculated. (6 points)
+# ------------------------------------------------------------> Space strings are created using string multiplication. (4 points)
+
     # 9. Create space strings
     # math for the string
 
@@ -286,18 +302,37 @@ for receipt_dict in order:
     # 10. Print the item name, price, and quantity
     #     Itme name / space variable / "pipe" / price / "pipe" / qty
     print(f"{receipt_item_name}{receipt_iten_name_space}| ${receipt_price}{receipt_price_space}| {receipt_quantity}")
+# ------------------------------------------> The customer's order is printed with the item name, price, and quantity. (6 points)
 
 # 11. Calculate the cost of the order using list comprehension
-# Multiply the price by quantity for each item in the order list, then sum()
-# and print the prices.
+#    Multiply the price by quantity for each item in the order list, then sum()
+#    and print the prices.
 receipt_total = 0
 for sub_t_dict in order:
-    receipt_total = receipt_total + (sub_t_dict["Price"] * sub_t_dict["Quantity"])
-    receipt_total = format(receipt_total,".2f")
+    receipt_total = float(receipt_total) + (sub_t_dict["Price"] * sub_t_dict["Quantity"])
+# ---------------------------------------------> List comprehension is used to calculate the total price of the order. (10 points)
+
+receipt_total = format(receipt_total,".2f")
+
+# test_01 = sum(order[i]["Price"])
+# print(test_01)
+# print(order[0]["Price"])
+
+# 888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+# 888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+# 888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+# 888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+# 888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+# 888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+# 888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+# 888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+# 888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+# 888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+# 888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
 
 print(f"\nYour total today is : ${receipt_total}\n")
+# --------------------------------------------------> The total price of the order is printed to the screen. (4 points)
 print("Thank you for shopping at the AI Bootcamp Food Truck.")
 
-# To Do
-# Move reference notes to ReadMe
-# Put in markers for specific point values
+
+
